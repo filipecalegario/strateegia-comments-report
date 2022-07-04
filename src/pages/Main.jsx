@@ -110,27 +110,36 @@ export default function Main() {
 
   function calculateMean(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return mean(items).toFixed(3);
+    return mean(items)?.toFixed(3);
   }
 
   function calculateStDev(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return stdev(items).toFixed(3);
+    return stdev(items)?.toFixed(3);
   }
 
   function calculateMedian(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return median(items).toFixed(3);
+    return median(items)?.toFixed(3);
   }
 
   function calculateMode(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return mode(items).toFixed(3);
+    console.log("item em moda %o", items);
+    const modeValue = mode(items);
+    console.log("modeValue %o", typeof modeValue);
+    let output = null;
+    if (typeof modeValue === "object") {
+      output = Array.from(modeValue).join(", ");
+    } else {
+      output = modeValue;
+    }
+    return output;
   }
 
   function calculateVariance(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return variance(items).toFixed(3);
+    return variance(items)?.toFixed(3);
   }
 
   useEffect(() => {
