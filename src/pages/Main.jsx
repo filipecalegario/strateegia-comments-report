@@ -20,6 +20,7 @@ import ProjectList from "../components/ProjectList";
 import { extractUserCommentInfo } from "../data/graphData";
 import * as d3 from "d3";
 import { exportTableAsCsv, exportJson } from "../utils/exportFunctions";
+import { mean, stdev, median, mode, variance } from "stats-lite";
 
 export default function Main() {
   const [selectedProject, setSelectedProject] = useState("");
@@ -97,6 +98,41 @@ export default function Main() {
     fetchData();
   }, [selectedProject]);
 
+  function calculateAverage(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    console.log("items %o", items);
+    return items
+      .reduce((avg, value, _, { length }) => {
+        return avg + value / length;
+      }, 0)
+      .toFixed(2);
+  }
+
+  function calculateMean(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    return mean(items).toFixed(3);
+  }
+
+  function calculateStDev(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    return stdev(items).toFixed(3);
+  }
+
+  function calculateMedian(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    return median(items).toFixed(3);
+  }
+
+  function calculateMode(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    return mode(items).toFixed(3);
+  }
+
+  function calculateVariance(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    return variance(items).toFixed(3);
+  }
+
   useEffect(() => {
     setAccessToken(localStorage.getItem("accessToken"));
   }, []);
@@ -161,6 +197,87 @@ export default function Main() {
             <Table id={"table_output"} variant={"striped"} size={"sm"}>
               <Thead>
                 <Tr>
+                  <Th>Estatística</Th>
+                  <Th>respostas às questões</Th>
+                  <Th>comentários às respostas</Th>
+                  <Th>concordâncias</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr key="mean">
+                  <Td>
+                    <b>média</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMean("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMean("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMean("agreements")}</b>
+                  </Td>
+                </Tr>
+                <Tr key="median">
+                  <Td>
+                    <b>mediana</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMedian("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMedian("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMedian("agreements")}</b>
+                  </Td>
+                </Tr>
+                <Tr key="mode">
+                  <Td>
+                    <b>moda</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMode("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMode("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateMode("agreements")}</b>
+                  </Td>
+                </Tr>
+                <Tr key="stddev">
+                  <Td>
+                    <b>desvio padrão</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateStDev("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateStDev("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateStDev("agreements")}</b>
+                  </Td>
+                </Tr>
+                <Tr key="variance">
+                  <Td>
+                    <b>variância</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateVariance("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateVariance("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateVariance("agreements")}</b>
+                  </Td>
+                </Tr>
+              </Tbody>
+              <br></br>
+              <Thead>
+                <Tr>
                   <Th>usuário</Th>
                   <Th>respostas às questões</Th>
                   <Th>comentários às respostas</Th>
@@ -183,10 +300,10 @@ export default function Main() {
               </Tbody>
             </Table>
           </TableContainer>
-          <Heading as={"h3"} size={"md"} mt={3}>
+          {/* <Heading as={"h3"} size={"md"} mt={3}>
             dados brutos
           </Heading>
-          <pre>{JSON.stringify(rawData, null, 2)}</pre>
+          <pre>{JSON.stringify(rawData, null, 2)}</pre> */}
         </Fragment>
       )}
     </Box>
