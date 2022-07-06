@@ -110,17 +110,17 @@ export default function Main() {
 
   function calculateMean(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return mean(items)?.toFixed(3);
+    return mean(items)?.toFixed(2);
   }
 
   function calculateStDev(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return stdev(items)?.toFixed(3);
+    return stdev(items)?.toFixed(2);
   }
 
   function calculateMedian(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return median(items)?.toFixed(3);
+    return median(items)?.toFixed(2);
   }
 
   function calculateMode(item) {
@@ -139,7 +139,7 @@ export default function Main() {
 
   function calculateVariance(item) {
     const items = commentsReport?.counter.map((d) => d[item] || 0);
-    return variance(items)?.toFixed(3);
+    return variance(items)?.toFixed(2);
   }
 
   function calculateCoefficientOfVariation(item) {
@@ -148,6 +148,17 @@ export default function Main() {
     const average = mean(items);
     const coefficientOfVariation = standardDeviation / average;
     return coefficientOfVariation.toFixed(2);
+  }
+
+  function calculateEquilibriumIndex(item) {
+    const equilibriumIndex = 1 - calculateCoefficientOfVariation(item);
+    return equilibriumIndex;
+  }
+
+  function calculateTotalEquilibriumIndex() {
+    const commentsEI = calculateEquilibriumIndex("comments");
+    const repliesEI = calculateEquilibriumIndex("replies");
+    return ((commentsEI + repliesEI) / 2).toFixed(2);
   }
 
   useEffect(() => {
@@ -222,93 +233,54 @@ export default function Main() {
               </Thead>
               <Tbody>
                 <Tr key="mean">
-                  <Td>
-                    <b>média</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMean("comments")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMean("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMean("agreements")}</b>
-                  </Td>
+                  <Td>média</Td>
+                  <Td>{calculateMean("comments")}</Td>
+                  <Td>{calculateMean("replies")}</Td>
+                  <Td>{calculateMean("agreements")}</Td>
                 </Tr>
                 <Tr key="median">
-                  <Td>
-                    <b>mediana</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMedian("comments")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMedian("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMedian("agreements")}</b>
-                  </Td>
+                  <Td>mediana</Td>
+                  <Td>{calculateMedian("comments")}</Td>
+                  <Td>{calculateMedian("replies")}</Td>
+                  <Td>{calculateMedian("agreements")}</Td>
                 </Tr>
                 <Tr key="mode">
-                  <Td>
-                    <b>moda</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMode("comments")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMode("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateMode("agreements")}</b>
-                  </Td>
+                  <Td>moda</Td>
+                  <Td>{calculateMode("comments")}</Td>
+                  <Td>{calculateMode("replies")}</Td>
+                  <Td>{calculateMode("agreements")}</Td>
                 </Tr>
                 <Tr key="stddev">
-                  <Td>
-                    <b>desvio padrão</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateStDev("comments")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateStDev("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateStDev("agreements")}</b>
-                  </Td>
+                  <Td>desvio padrão</Td>
+                  <Td>{calculateStDev("comments")}</Td>
+                  <Td>{calculateStDev("replies")}</Td>
+                  <Td>{calculateStDev("agreements")}</Td>
                 </Tr>
                 <Tr key="variance">
-                  <Td>
-                    <b>variância</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateVariance("comments")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateVariance("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateVariance("agreements")}</b>
-                  </Td>
+                  <Td>variância</Td>
+                  <Td>{calculateVariance("comments")}</Td>
+                  <Td>{calculateVariance("replies")}</Td>
+                  <Td>{calculateVariance("agreements")}</Td>
                 </Tr>
                 <Tr key="coefficient">
+                  <Td>índice de equilíbrio</Td>
                   <Td>
-                    <b>índice de equilíbrio</b>
+                    {(calculateEquilibriumIndex("comments") * 100).toFixed(2)}%
                   </Td>
                   <Td>
-                    <b>{calculateCoefficientOfVariation("comments")}</b>
+                    {(calculateEquilibriumIndex("replies") * 100).toFixed(2)}%
                   </Td>
                   <Td>
-                    <b>{calculateCoefficientOfVariation("replies")}</b>
-                  </Td>
-                  <Td>
-                    <b>{calculateCoefficientOfVariation("agreements")}</b>
+                    {(calculateEquilibriumIndex("agreements") * 100).toFixed(2)}
+                    %
                   </Td>
                 </Tr>
-                {/* <Tr key="coefficient">
-                  <Td>total</Td>
-                  <Td></Td>
-                </Tr> */}
+                <Tr key="total">
+                  <Td>índice de equilíbrio total</Td>
+                  <Td colspan={3}>
+                    {(calculateTotalEquilibriumIndex() * 100).toFixed(2)}%
+                  </Td>
+                </Tr>
               </Tbody>
               <br></br>
               <Thead>
