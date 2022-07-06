@@ -142,6 +142,14 @@ export default function Main() {
     return variance(items)?.toFixed(3);
   }
 
+  function calculateCoefficientOfVariation(item) {
+    const items = commentsReport?.counter.map((d) => d[item] || 0);
+    const standardDeviation = stdev(items);
+    const average = mean(items);
+    const coefficientOfVariation = standardDeviation / average;
+    return coefficientOfVariation.toFixed(2);
+  }
+
   useEffect(() => {
     setAccessToken(localStorage.getItem("accessToken"));
   }, []);
@@ -283,6 +291,24 @@ export default function Main() {
                     <b>{calculateVariance("agreements")}</b>
                   </Td>
                 </Tr>
+                <Tr key="coefficient">
+                  <Td>
+                    <b>índice de equilíbrio</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateCoefficientOfVariation("comments")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateCoefficientOfVariation("replies")}</b>
+                  </Td>
+                  <Td>
+                    <b>{calculateCoefficientOfVariation("agreements")}</b>
+                  </Td>
+                </Tr>
+                {/* <Tr key="coefficient">
+                  <Td>total</Td>
+                  <Td></Td>
+                </Tr> */}
               </Tbody>
               <br></br>
               <Thead>
